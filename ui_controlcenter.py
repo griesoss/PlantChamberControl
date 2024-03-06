@@ -216,10 +216,13 @@ class Ui_MainWindow(object):
         Update the LEDList and the Simple Control Tab with the new values from the Setup Tab.
         :param MainWindow: The main window of the application
         """
-        #iterate over self.SetupFrameDict and create a new LED object for each entry and update the LEDList
+        # Turn off all LEDs
+        self.ArduinoCommunication.turn_off_all_LEDs(self.LEDList)
+        #time.sleep(5)
+        # Iterate over self.SetupFrameDict and create a new LED object for each entry and update the LEDList
         self.LEDList = []
         for key in self.SetupFrameDict:            
-            #create a new LED object for each entry in the dictionary if the str of one of these values is "" do not create an LED object
+            # Create a new LED object for each entry in the dictionary if the str of one of these values is "" do not create an LED object
             if self.SetupFrameDict[key].lineEdit_led_name.text() != "" and self.SetupFrameDict[key].lineEdit_pin_number.text() != "" and self.SetupFrameDict[key].lineEdit_mA_value.text() != "":
                 self.LEDList.append(LED(self.SetupFrameDict[key].lineEdit_led_name.text(), False, int(self.SetupFrameDict[key].lineEdit_pin_number.text()), int(self.SetupFrameDict[key].lineEdit_mA_value.text()), self.SetupFrameDict[key].lineEdit_temperature_adress.text()))
         self.createSimpleControl()

@@ -77,6 +77,17 @@ class ArduinoCommunication(QObject):
 			"pin_num": 0,
 			"pwm_val": 250,
 		} 	
+  
+	def turn_off_all_LEDs(self, LED_list):
+		"""
+		Turn off all the LEDs in the LED_list.
+		:param LED_list: List of LED objects
+		"""
+		for led in LED_list:
+			self.turn_off_LED(led.pin_num)
+			time.sleep(0.1)
+   
+   
  
 	def update_pin_data(self, LED_list):
 		"""
