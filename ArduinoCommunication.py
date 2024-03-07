@@ -45,7 +45,7 @@ class ArduinoCommunication(QObject):
 		# Default values for pin_data
 		self.pin_data = {
 			"type": "Setup",
-				"pwm_pin_val": {
+			"pwm_pin_val": {
 				"uv2": 13,
 				"uv1": 12,
 				"blue": 11,
@@ -57,7 +57,7 @@ class ArduinoCommunication(QObject):
 				"farred2": 5,
 				"k5000": 4,
 				},
-				"temp_addr": {
+			"temp_addr": {
 				"uv2": 0x40,
 				"uv1": 0x41,
 				"blue": 0x42,
@@ -70,6 +70,16 @@ class ArduinoCommunication(QObject):
 				"k5000": 0x49,
         		}
 		}
+  
+		self.temp_data = {
+				"type": "Temp",
+				"temp_1": {
+					"val_1": 13,
+					"val_2": 12,
+					"val_3": 11,
+					"val_4": 10,
+					},
+				}
 		
 		# Default values for toggle_data
 		self.toggle_data = {
@@ -182,8 +192,12 @@ class ArduinoCommunication(QObject):
 		while True:
 			try:
 				line = self.arduino.readline().decode(errors='replace').strip()
-				if line:
-					print(line)
+				if line:					
+					if line.startswith('{"type":"Temperature"'):
+						self.temp_data = json.loads(line)
+						# TODO: save data to database
+					else:
+						print(line)
 			except Exception as e:
 				time.sleep(1)
 				self.reconnect()

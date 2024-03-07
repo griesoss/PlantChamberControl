@@ -5,44 +5,95 @@
 #define TCA_ADDRESS  0x70 // I2C address of the TCA9548A
 #define TCA9548A_CHANNEL_0    0
 
-struct TemperatureSensor {
-	int address;
-	Generic_LM75 sensor;
+class TemperatureSensor {
+private:
+	String name;       // Name of the sensor
+    int address;            // Address of the sensor
+    Generic_LM75 sensor;    // Instance of the LM75 sensor
+
+   
+
+public:
+	// Default constructor
+	TemperatureSensor() {}
+
+    // Constructor
+    TemperatureSensor(String sensorName, int sensorAddr, Generic_LM75 sensor) : name(sensorName), address(sensorAddr), sensor(sensor)  {}
+
+    // Getter for the address
+    int getAddress() const {
+        return address;
+    }
+
+    // Getter for the name
+    String getName() const {
+        return name;
+    }
+
+    // Method to get the temperature reading from the sensor
+    double getTemperature() {
+        double temp = sensor.readTemperatureC();
+        return temp; // Placeholder return value
+    }
+
+    // Other methods and functionalities can be added as needed
 };
 
-TemperatureSensor tempSensors[] = {
-	{0x40, Generic_LM75 (0x40)},
-	{0x41, Generic_LM75 (0x41)},
-	{0x42, Generic_LM75 (0x42)},
-	{0x43, Generic_LM75 (0x43)},
-	{0x44, Generic_LM75 (0x44)},
-	{0x45, Generic_LM75 (0x45)},
-	{0x46, Generic_LM75 (0x46)},
-	{0x47, Generic_LM75 (0x47)},
-	{0x48, Generic_LM75 (0x48)},
-	{0x49, Generic_LM75 (0x49)},
-	{0x4A, Generic_LM75 (0x4A)},
-	{0x4B, Generic_LM75 (0x4B)},
-	{0x4C, Generic_LM75 (0x4C)},
-	{0x4D, Generic_LM75 (0x4D)},
-	{0x4E, Generic_LM75 (0x4E)},
-	{0x4F, Generic_LM75 (0x4F)},
-	{0x50, Generic_LM75 (0x50)},
-	{0x51, Generic_LM75 (0x51)},
-	{0x52, Generic_LM75 (0x52)},
-	{0x53, Generic_LM75 (0x53)},
-	{0x54, Generic_LM75 (0x54)},
-	{0x55, Generic_LM75 (0x55)},
-	{0x56, Generic_LM75 (0x56)},
-	{0x57, Generic_LM75 (0x57)},
-	{0x58, Generic_LM75 (0x58)},
-	{0x59, Generic_LM75 (0x59)},
-	{0x5A, Generic_LM75 (0x5A)},
-	{0x5B, Generic_LM75 (0x5B)},
-	{0x5C, Generic_LM75 (0x5C)},
-	{0x5D, Generic_LM75 (0x5D)},
-	{0x5E, Generic_LM75 (0x5E)},
-	{0x5F, Generic_LM75 (0x5F)}};
+
+
+class DynamicTemperatureSensorArray {
+private:
+    TemperatureSensor* sensors; // Pointer to array of sensors
+    int size; // Current size of the array
+    int capacity; // Capacity of the array
+
+public:
+    // Constructor
+    DynamicTemperatureSensorArray() : sensors(nullptr), size(0), capacity(0) {}
+
+    // Destructor
+    ~DynamicTemperatureSensorArray() {
+        delete[] sensors; // Free memory
+    }
+
+    // Method to add a sensor
+    void addSensor(const TemperatureSensor& sensor) {
+    if (size >= capacity) {
+        // Resize the array if needed
+        int newCapacity = (capacity == 0) ? 1 : capacity * 2; // Double the capacity
+        TemperatureSensor* newSensors = new TemperatureSensor[newCapacity];
+
+        // Copy existing elements
+        for (int i = 0; i < size; ++i) {
+            newSensors[i] = sensors[i];
+        }
+
+        // Free memory of old array
+        delete[] sensors;
+
+        // Update pointers and capacity
+        sensors = newSensors;
+        capacity = newCapacity;
+    }
+
+    // Add the new sensor
+    sensors[size++] = sensor;
+}
+
+
+    // Method to get the number of sensors
+    int getSize() const {
+        return size;
+    }
+
+    // Method to access sensors by index
+    TemperatureSensor& operator[](int index) {
+        return sensors[index];
+    }
+};
+
+DynamicTemperatureSensorArray tempSensors; // Create an instance of the DynamicTemperatureSensorArray class
+
 
 void setup() { 
 	Serial.begin(115200); 
@@ -59,12 +110,11 @@ void setup() {
 } 
 
 void loop() { 
-	while (!Serial) {
-		// Wait for serial input
+	while (!Serial) {}; 
 
-	}; 
-
-	//Serial.println("Temperature: DUMMYVALUE°C");
+	String temperature = measureTemperature();
+	Serial.println(temperature);
+	
 	if (Serial.available()>0) {
 		StaticJsonDocument<200> doc = readSerial();
 		if (!doc.isNull()) { 
@@ -74,6 +124,38 @@ void loop() {
 		}
 	}
 } 
+
+String measureTemperature() {
+	StaticJsonDocument<200> doc;
+	doc["type"] = "Temperature";
+	
+	for (int i = 0; i < tempSensors.getSize(); i++) {
+		JsonObject temp = doc.createNestedObject(tempSensors[i].getName());
+		for (int channel = 0; channel < 4; channel++) {
+			selectChannel(channel); // Select channel
+			// Communicate with devices on the selected bus
+			int temp_val = tempSensors[i].getTemperature();
+			//Serial.println("Temperature: " + String(temp_val) + "°C");
+			//int temp_val = 20;
+			temp["val_" + String(channel)] = temp_val;
+
+			// delay(100); // Delay for stability
+		}
+	}
+	String output;
+	serializeJson(doc, output);
+	return output;
+}
+
+
+/* Generic_LM75 getTemperatureSensor(int address){
+	for (int i = 0; i < sizeof(tempSensors); i++){
+		if (tempSensors[i].address == address){
+			return tempSensors[i].sensor;
+		}
+	}
+} */
+
 
 /**
  * Toggles the pin based on the type of command
@@ -88,17 +170,18 @@ void togglePin(StaticJsonDocument<200> doc){
 	int pin = doc["pin_num"].as<int>(); // Access the value associated with the key "pin"
 	int pwmVal = doc["pwm_val"].as<int>(); // Access the value associated with the key "value"
 
-	Generic_LM75 temp_sensor = getTemperatureSensor(doc["temp_adrr"].as<int>());
-	int temp = 0;
+	/* Generic_LM75 temp_sensor = getTemperatureSensor(doc["temp_adrr"].as<int>());
+	
 
 	for (int channel = 0; channel < 4; channel++) {
         selectChannel(channel); // Select channel
         // Communicate with devices on the selected bus
 		// int temp = temp_sensor.readTemperatureC();
         // delay(100); // Delay for stability
-    }
+    } */
 
-	Serial.println("Temperature: " + String(temp) + "°C");
+	//int temp = 0;
+	//Serial.println("Temperature: " + String(temp) + "°C");
 
 	if (strcmp(doc["type"], "ON") == 0) { 
 		analogWrite(pin, pwmVal);		
@@ -131,13 +214,23 @@ void setupPins(StaticJsonDocument<200> doc){
 		}	
 }
 
+/**
+ * Sets up the temperature sensors based on the information from the JSON document
+ * @param doc The JSON document
+ * @return void
+*/
 void setupTemperatureSensors(StaticJsonDocument<200> doc){
-	JsonObject temperatureSensors = doc["temp_adrr"]; // Access the nested JSON object
-
+	JsonObject temperatureSensors = doc["temp_addr"]; // Access the nested JSON object
+	//connected_TempSensors = 0;
 	// Iterate over the LED TemperatureSensors
 	for (JsonPair sensor : temperatureSensors) {
-		
-		}
+		String name = String(sensor.key().c_str()); 
+		int address = sensor.value(); 	
+		Generic_LM75 temp_sensor = Generic_LM75(address);
+		TemperatureSensor tempSensor = TemperatureSensor(name, address, temp_sensor);
+		tempSensors.addSensor(tempSensor);
+		Serial.println("Temperature sensor: " + name + " at address " + String(address));
+	}
 }
 
 /**
@@ -153,6 +246,7 @@ void executeJsonCommand(StaticJsonDocument<200> doc){
 	if (strcmp(doc["type"], "Setup") == 0) {
 		// Setup
 		setupPins(doc);
+		//delay(1000);
 		setupTemperatureSensors(doc);
 	}else if(strcmp(doc["type"], "ON") == 0 || strcmp(doc["type"], "OFF") == 0) {
 		// Toggling
@@ -163,16 +257,14 @@ void executeJsonCommand(StaticJsonDocument<200> doc){
 	}
 }
 
-Generic_LM75 getTemperatureSensor(int address){
-	for (int i = 0; i < sizeof(tempSensors); i++){
-		if (tempSensors[i].address == address){
-			return tempSensors[i].sensor;
-		}
-	}
-}
+
 
 void selectChannel(uint8_t channel) {
     Wire.beginTransmission(TCA_ADDRESS);
     Wire.write(1 << channel); // Select the channel
     Wire.endTransmission();
 }
+
+
+
+		

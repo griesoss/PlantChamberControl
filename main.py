@@ -30,7 +30,6 @@ class MainWindow(QMainWindow):
         connection_dialog.exec()
         arduino_communication.dialog_opened = False
         
-
         
 if __name__ == "__main__":
     # Create the application

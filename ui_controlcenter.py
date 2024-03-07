@@ -191,7 +191,7 @@ class Ui_MainWindow(object):
             self.SetupFrameDict[key].lineEdit_pin_number.setPlaceholderText("2-13, 44-46")
             self.SetupFrameDict[key].lineEdit_mA_value.setPlaceholderText("0-250mA")
             self.SetupFrameDict[key].label_temperature_adress.setText(QCoreApplication.translate("MainWindow", u"Temperature Sensor Adress", None))
-            self.SetupFrameDict[key].lineEdit_temperature_adress.setPlaceholderText("0x40-0x4F")
+            self.SetupFrameDict[key].lineEdit_temperature_adress.setPlaceholderText("0x40-0x5F")
             index = index + 1
         
         # Iterate over self.SimpleControlFrameList
@@ -224,7 +224,7 @@ class Ui_MainWindow(object):
         for key in self.SetupFrameDict:            
             # Create a new LED object for each entry in the dictionary if the str of one of these values is "" do not create an LED object
             if self.SetupFrameDict[key].lineEdit_led_name.text() != "" and self.SetupFrameDict[key].lineEdit_pin_number.text() != "" and self.SetupFrameDict[key].lineEdit_mA_value.text() != "":
-                self.LEDList.append(LED(self.SetupFrameDict[key].lineEdit_led_name.text(), False, int(self.SetupFrameDict[key].lineEdit_pin_number.text()), int(self.SetupFrameDict[key].lineEdit_mA_value.text()), self.SetupFrameDict[key].lineEdit_temperature_adress.text()))
+                self.LEDList.append(LED(self.SetupFrameDict[key].lineEdit_led_name.text(), False, int(self.SetupFrameDict[key].lineEdit_pin_number.text()), int(self.SetupFrameDict[key].lineEdit_mA_value.text()), int(self.SetupFrameDict[key].lineEdit_temperature_adress.text()[2:],16)))
         self.createSimpleControl()
         self.retranslateUi(MainWindow)
     # updateLEDList
