@@ -155,8 +155,7 @@ class Ui_MainWindow(object):
         # Load the LED List after Setup to the Arduino
         self.ArduinoCommunication.setup_LEDs(self.LEDList)
     # setupUi 
-    
-    
+        
     
     def createSimpleControl(self):
         """

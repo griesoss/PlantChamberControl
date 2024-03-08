@@ -11,6 +11,7 @@ import time
 import json
 from enum import Enum
 from LED import *
+from TemperatureData import *
 
 
 class ArduinoCommunication(QObject):
@@ -25,11 +26,9 @@ class ArduinoCommunication(QObject):
 		Set the default values for pin_data and toggle_data.
 		"""	
 		super().__init__()
-		self.listening = True
 		self.dialog_opened = False
-		#self.arduino = serial.Serial(port='COM3', baudrate=115200, timeout=.1)
 
-		# try to connect arduino
+		# Estalishing Connection with the Arduino
 		arduino_communication = None
 		while arduino_communication is None:
 			try:
@@ -70,24 +69,18 @@ class ArduinoCommunication(QObject):
 				"k5000": 0x49,
         		}
 		}
-  
-		self.temp_data = {
-				"type": "Temp",
-				"temp_1": {
-					"val_1": 13,
-					"val_2": 12,
-					"val_3": 11,
-					"val_4": 10,
-					},
-				}
-		
+
 		# Default values for toggle_data
 		self.toggle_data = {
 			"type": "Toggle",
 			"pin_num": 0,
 			"pwm_val": 250,
-		} 	
-  
+		} 
+
+		# Create a global TemperatureData object array
+		self.temp_data = []
+		
+    
 	def turn_off_all_LEDs(self, LED_list):
 		"""
 		Turn off all the LEDs in the LED_list.
@@ -194,16 +187,16 @@ class ArduinoCommunication(QObject):
 				line = self.arduino.readline().decode(errors='replace').strip()
 				if line:					
 					if line.startswith('{"type":"Temperature"'):
-						self.temp_data = json.loads(line)
+						temp_data = json.loads(line)
 						# TODO: save data to database
+						self.save_temp_data(temp_data)
 					else:
 						print(line)
 			except Exception as e:
 				time.sleep(1)
 				self.reconnect()
     
-	#def start_listening(self):
-	#	self.listening = True
+	
   
 	def reconnect(self):
 		"""
@@ -220,6 +213,19 @@ class ArduinoCommunication(QObject):
 					self.connection_error.emit()
 				time.sleep(1)
 				arduino_communication = None
+    				
+	def save_temp_data(self, temp_data):
+		"""
+		Get the temperature data from the Arduino.
+		"""
+		# Iterate through the temp_data
+		for key, value_layer1 in temp_data.items():
+			values = []
+			if value_layer1 != "Temperature":
+				for value_layer2 in value_layer1.values():
+					values.append(value_layer2)
+				self.temp_data.append(TemperatureData(key, values))
+		#self.temp_data = []
   
 
 class ConnectionDialog(QDialog):
