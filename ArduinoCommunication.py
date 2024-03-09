@@ -19,6 +19,7 @@ class ArduinoCommunication(QObject):
 	Establishes a connection with the Arduino and sends data to the Arduino.
 	"""
 	connection_error = Signal()
+	temp_changed = Signal()
  
 	def __init__(self):
 		"""
@@ -190,6 +191,7 @@ class ArduinoCommunication(QObject):
 						temp_data = json.loads(line)
 						# TODO: save data to database
 						self.save_temp_data(temp_data)
+						self.temp_changed.emit()
 					else:
 						print(line)
 			except Exception as e:
@@ -225,7 +227,7 @@ class ArduinoCommunication(QObject):
 				for value_layer2 in value_layer1.values():
 					values.append(value_layer2)
 				self.temp_data.append(TemperatureData(key, values))
-		#self.temp_data = []
+		return self.temp_data
   
 
 class ConnectionDialog(QDialog):
