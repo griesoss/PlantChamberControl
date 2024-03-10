@@ -1,0 +1,3 @@
+class hyperspec_cam:
+    def __init__(self, value):
+        self.value = value

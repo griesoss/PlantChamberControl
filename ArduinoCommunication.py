@@ -10,7 +10,7 @@ import serial
 import time 
 import json
 from enum import Enum
-from LED import *
+from periphery.LED import *
 from TemperatureData import *
 
 

@@ -85,9 +85,9 @@ class Ui_MainWindow(object):
         self.tabWidget.addTab(self.tab, "")
         
         # Tab 2 ############################################################################################################	
-        self.tab_2 = QWidget()
-        self.tab_2.setObjectName(u"tab_2")
-        self.tabWidget.addTab(self.tab_2, "")
+        #self.tab_2 = QWidget()
+        #self.tab_2.setObjectName(u"tab_2")
+        #self.tabWidget.addTab(self.tab_2, "")
         
         # Tab 3 ############################################################################################################
         self.tab_3 = QWidget()
@@ -102,6 +102,12 @@ class Ui_MainWindow(object):
         self.scrollAreaWidgetContents_4.setGeometry(QRect(0, 0, 1711, 1137))
         self.verticalLayout_8 = QVBoxLayout(self.scrollAreaWidgetContents_4)
         self.verticalLayout_8.setObjectName(u"verticalLayout_8")
+        
+        font = QFont()
+        font.setPointSize(9)
+        font.setBold(True)
+        
+        
         self.frame_6 = QFrame(self.scrollAreaWidgetContents_4)
         self.frame_6.setObjectName(u"frame_6")
         self.frame_6.setFrameShape(QFrame.StyledPanel)
@@ -113,8 +119,145 @@ class Ui_MainWindow(object):
         
         
         #########
-
         self.verticalLayout_8.addWidget(self.frame_6)
+        
+        self.frame_heading = QFrame(self.scrollAreaWidgetContents_4)
+        self.frame_heading.setObjectName(u"frame_heading")
+        self.frame_heading.setFrameShape(QFrame.StyledPanel)
+        self.frame_heading.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_9 = QVBoxLayout(self.frame_heading)
+        self.horizontalLayout_9.setObjectName(u"horizontalLayout_9")
+
+        
+        
+        self.label_1 = QLabel(self.frame_heading)
+        self.label_1.setObjectName(u"label_1")
+        self.label_1.setFont(font)
+        
+        self.horizontalLayout_9.addWidget(self.label_1)
+
+        self.verticalLayout_8.addWidget(self.frame_heading)
+        
+        
+        ####################################################
+        
+        # Load Data from the JSON File
+        with open("measurement_setup.json", 'r') as json_file:
+            data = json.load(json_file)
+        
+    
+        # Frame for the Spectrometer values
+        self.frame_spectrometer_val = QFrame(self.scrollAreaWidgetContents_4)
+        self.frame_spectrometer_val.setObjectName(u"frame_spectrometer_val")
+        self.frame_spectrometer_val.setFrameShape(QFrame.StyledPanel)
+        self.frame_spectrometer_val.setFrameShadow(QFrame.Raised)
+        self.gridLayout_6 = QGridLayout(self.frame_spectrometer_val)
+        self.gridLayout_6.setObjectName(u"gridLayout_6")
+        
+        self.label_spectrometer_vals = QLabel(self.frame_spectrometer_val)
+        self.label_spectrometer_vals.setObjectName(u"label_spectrometer_vals")
+        self.label_spectrometer_vals.setMinimumSize(QSize(180, 0))
+        self.gridLayout_6.addWidget(self.label_spectrometer_vals, 0, 0, 1, 1)
+        
+        self.line_2 = QFrame(self.frame_spectrometer_val)
+        self.line_2.setObjectName(u"line_2")
+        self.line_2.setFrameShape(QFrame.VLine)
+        self.line_2.setFrameShadow(QFrame.Sunken)
+        self.gridLayout_6.addWidget(self.line_2, 0, 1, 1, 1)
+        
+        self.label_placeholder1 = QLabel(self.frame_spectrometer_val)
+        self.label_placeholder1.setObjectName(u"label_placeholder1")
+        self.gridLayout_6.addWidget(self.label_placeholder1, 0, 2, 1, 1)
+        
+        self.lineEdit_placeholder1 = QLineEdit(self.frame_spectrometer_val)
+        self.lineEdit_placeholder1.setObjectName(u"lineEdit_placeholder1")
+        self.lineEdit_placeholder1.setText(str(data['spectrometer']['value1']))
+        self.gridLayout_6.addWidget(self.lineEdit_placeholder1, 0, 3, 1, 1)  
+      
+        self.label_placeholder2 = QLabel(self.frame_spectrometer_val)
+        self.label_placeholder2.setObjectName(u"label_placeholder2")
+        self.gridLayout_6.addWidget(self.label_placeholder2, 0, 4, 1, 1)
+        
+        self.lineEdit_placeholder2 = QLineEdit(self.frame_spectrometer_val)
+        self.lineEdit_placeholder2.setObjectName(u"lineEdit_placeholder2")
+        self.lineEdit_placeholder2.setText(str(data['spectrometer']['value2']))
+        self.gridLayout_6.addWidget(self.lineEdit_placeholder2, 0, 5, 1, 1)
+        
+        self.verticalLayout_8.addWidget(self.frame_spectrometer_val)
+
+        # Frame for the Hyperspectral Camera values
+        self.frame_hypercam_val = QFrame(self.scrollAreaWidgetContents_4)
+        self.frame_hypercam_val.setObjectName(u"frame_hypercam_val")
+        self.frame_hypercam_val.setFrameShape(QFrame.StyledPanel)
+        self.frame_hypercam_val.setFrameShadow(QFrame.Raised)
+        self.gridLayout_5 = QGridLayout(self.frame_hypercam_val)
+        self.gridLayout_5.setObjectName(u"gridLayout_5")
+
+        self.label_hypercam_vals = QLabel(self.frame_hypercam_val)
+        self.label_hypercam_vals.setObjectName(u"label_hypercam_vals")
+        self.label_hypercam_vals.setMinimumSize(QSize(180, 0))
+        self.gridLayout_5.addWidget(self.label_hypercam_vals, 1, 0, 1, 1)
+
+        self.line_3 = QFrame(self.frame_hypercam_val)
+        self.line_3.setObjectName(u"line_3")
+        self.line_3.setFrameShape(QFrame.VLine)
+        self.line_3.setFrameShadow(QFrame.Sunken)
+        self.gridLayout_5.addWidget(self.line_3, 1, 2, 1, 1)
+
+        self.label_placeholder3 = QLabel(self.frame_hypercam_val)
+        self.label_placeholder3.setObjectName(u"label_placeholder3")
+        self.gridLayout_5.addWidget(self.label_placeholder3, 1, 3, 1, 1)
+        
+        self.lineEdit_placeholder3 = QLineEdit(self.frame_hypercam_val)
+        self.lineEdit_placeholder3.setObjectName(u"lineEdit_placeholder3")
+        self.lineEdit_placeholder3.setText(str(data['hyperspectral_camera']['value']))
+        self.gridLayout_5.addWidget(self.lineEdit_placeholder3, 1, 4, 1, 1)
+
+        self.verticalLayout_8.addWidget(self.frame_hypercam_val)
+        
+        
+        self.frame_18 = QFrame(self.scrollAreaWidgetContents_4)
+        self.frame_18.setObjectName(u"frame_18")
+        self.frame_18.setFrameShape(QFrame.StyledPanel)
+        self.frame_18.setFrameShadow(QFrame.Raised)
+        self.gridLayout_7 = QGridLayout(self.frame_18)
+        self.gridLayout_7.setObjectName(u"gridLayout_7")
+        self.label_22 = QLabel(self.frame_18)
+        self.label_22.setObjectName(u"label_22")
+
+        self.gridLayout_7.addWidget(self.label_22, 0, 2, 1, 1)
+
+        self.label_21 = QLabel(self.frame_18)
+        self.label_21.setObjectName(u"label_21")
+
+        self.gridLayout_7.addWidget(self.label_21, 0, 0, 1, 1)
+
+        self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.gridLayout_7.addItem(self.horizontalSpacer_3, 0, 4, 1, 1)
+
+        self.lineEdit_8 = QLineEdit(self.frame_18)
+        self.lineEdit_8.setObjectName(u"lineEdit_8")
+        self.lineEdit_8.setMaximumSize(QSize(200, 16777215))
+
+        self.gridLayout_7.addWidget(self.lineEdit_8, 0, 1, 1, 1)
+
+        self.comboBox = QComboBox(self.frame_18)
+        self.comboBox.setObjectName(u"comboBox")
+        self.comboBox.addItem("Zero Level - Mounted")
+        self.comboBox.addItem("Zero Level - Unmounted")
+        self.comboBox.addItem("In Vivo")
+        self.comboBox.currentIndexChanged.connect(print())
+
+        self.gridLayout_7.addWidget(self.comboBox, 0, 3, 1, 1)
+
+
+        self.verticalLayout_8.addWidget(self.frame_18)
+
+        self.pushButton_6 = QPushButton(self.scrollAreaWidgetContents_4)
+        self.pushButton_6.setObjectName(u"pushButton_6")
+
+        self.verticalLayout_8.addWidget(self.pushButton_6)
 
         self.pushButton_5 = QPushButton(self.scrollAreaWidgetContents_4)
         self.pushButton_5.setObjectName(u"pushButton_5")
@@ -338,26 +481,34 @@ class Ui_MainWindow(object):
         
         self.pushButton_add_LED.setText(QCoreApplication.translate("MainWindow", u"Add LED", None))
         self.pushButton_setup.setText(QCoreApplication.translate("MainWindow", u"SETUP", None))        
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("MainWindow", u"Setup", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("MainWindow", u"Calibration", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), QCoreApplication.translate("MainWindow", u"Measurement", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), QCoreApplication.translate("MainWindow", u"Simple Control", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("MainWindow", u"LED Setup", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), QCoreApplication.translate("MainWindow", u"Calibration && Measurement", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), QCoreApplication.translate("MainWindow", u"Simple LED Control", None))
+        self.label_22.setText(QCoreApplication.translate("MainWindow", u"Measurement Type", None))
+        self.label_21.setText(QCoreApplication.translate("MainWindow", u"Plant ID", None))
+        self.pushButton_6.setText(QCoreApplication.translate("MainWindow", u"Start Calibration", None))
+        
+        self.label_placeholder2.setText(QCoreApplication.translate("MainWindow", u"Value", None))
+        self.label_spectrometer_vals.setText(QCoreApplication.translate("MainWindow", u"Spectrometer Values", None))
+        self.label_placeholder1.setText(QCoreApplication.translate("MainWindow", u"Value", None))
+        self.label_hypercam_vals.setText(QCoreApplication.translate("MainWindow", u"Hyperspectral Camera Values", None))
+        self.label_placeholder3.setText(QCoreApplication.translate("MainWindow", u"Value", None))
+        self.label_1.setText(QCoreApplication.translate("MainWindow", u"Measurement Settings", None))
         
         # Iterate over self.MeasurementFrameList
         for index in range(0, len(self.MeasurementFrameList)):
-            self.MeasurementFrameList[index].label_led_name.setText(QCoreApplication.translate("MainWindow", u"LED Name " + str(index + 1), None))
+            self.MeasurementFrameList[index].label_usage.setText(QCoreApplication.translate("MainWindow", u"Use in ", None))
             self.MeasurementFrameList[index].checkBox_calibrate.setText(QCoreApplication.translate("MainWindow", u" Calibration", None))
             self.MeasurementFrameList[index].checkBox_measurement.setText(QCoreApplication.translate("MainWindow", u" Measurement", None))
             self.MeasurementFrameList[index].label_duration.setText(QCoreApplication.translate("MainWindow", u"Duration", None))
-            self.MeasurementFrameList[index].label_led_vals.setText(QCoreApplication.translate("MainWindow", u"TextLabel", None))
+            self.MeasurementFrameList[index].label_led_vals.setText(QCoreApplication.translate("MainWindow", u"LED Values", None))
             self.MeasurementFrameList[index].label_dimmer_val.setText(QCoreApplication.translate("MainWindow", u"Dimmer-Value", None))
-            self.MeasurementFrameList[index].label_placeholder2.setText(QCoreApplication.translate("MainWindow", u"TextLabel", None))
-            self.MeasurementFrameList[index].label_spectrometer_vals.setText(QCoreApplication.translate("MainWindow", u"Spectrometer Values", None))
-            self.MeasurementFrameList[index].label_placeholder1.setText(QCoreApplication.translate("MainWindow", u"TextLabel", None))
-            self.MeasurementFrameList[index].label_hypercam_vals.setText(QCoreApplication.translate("MainWindow", u"Hyperspectral Camera Values", None))
-            self.MeasurementFrameList[index].label_placeholder3.setText(QCoreApplication.translate("MainWindow", u"TextLabel", None))
-            self.MeasurementFrameList[index].label_placeholder4.setText(QCoreApplication.translate("MainWindow", u"TextLabel", None))
+            
             self.MeasurementFrameList[index].label_cam_vals.setText(QCoreApplication.translate("MainWindow", u"Camera Values", None))
+            
+            self.MeasurementFrameList[index].label_iso.setText(QCoreApplication.translate("MainWindow", u"ISO", None))
+            self.MeasurementFrameList[index].label_aperture.setText(QCoreApplication.translate("MainWindow", u"Aperture", None))
+            self.MeasurementFrameList[index].label_shutter_speed.setText(QCoreApplication.translate("MainWindow", u"Shutter Speed", None))
                    
         
         self.pushButton_5.setText(QCoreApplication.translate("MainWindow", u"Start Measurement", None))
@@ -380,7 +531,7 @@ class Ui_MainWindow(object):
         for key in self.SetupFrameDict:            
             # Create a new LED object for each entry in the dictionary if the str of one of these values is "" do not create an LED object
             if self.SetupFrameDict[key].lineEdit_led_name.text() != "" and self.SetupFrameDict[key].lineEdit_pin_number.text() != "" and self.SetupFrameDict[key].lineEdit_mA_value.text() != "":
-                self.LEDList.append(LED(self.SetupFrameDict[key].lineEdit_led_name.text(), False, int(self.SetupFrameDict[key].lineEdit_pin_number.text()), int(self.SetupFrameDict[key].lineEdit_mA_value.text()), int(self.SetupFrameDict[key].lineEdit_temperature_adress.text()[2:],16)))
+                self.LEDList.append(led(self.SetupFrameDict[key].lineEdit_led_name.text(), False, int(self.SetupFrameDict[key].lineEdit_pin_number.text()), int(self.SetupFrameDict[key].lineEdit_mA_value.text()), int(self.SetupFrameDict[key].lineEdit_temperature_adress.text()[2:],16)))
         self.createSimpleControlFrames()
         self.retranslateUi(MainWindow)
     # updateLEDList
@@ -439,7 +590,8 @@ class Ui_MainWindow(object):
             self.SetupFrameDict[current_index].lineEdit_led_name.setText(led_list.name)
             self.SetupFrameDict[current_index].lineEdit_pin_number.setText(str(led_list.pin_num))
             self.SetupFrameDict[current_index].lineEdit_mA_value.setText(str(led_list.mA_val))
-            self.SetupFrameDict[current_index].lineEdit_temperature_adress.setText(str(hex(led_list.temp_addr)))        
+            self.SetupFrameDict[current_index].lineEdit_temperature_adress.setText(str(hex(led_list.temp_addr)))     
+               
         
         # Manage the input validation for the line edits
         pin_validator = QRegularExpressionValidator(QRegularExpression("(?:[0-9]|1[0-3]|4[4-6])")) 
@@ -536,6 +688,7 @@ class Ui_MainWindow(object):
         
         # Set the name of the LED
         self.SimpleControlFrameList[index].lineEdit_led_name.setText(self.LEDList[index].name)    
+        self.SimpleControlFrameList[index].lineEdit_duration.setText(str(self.LEDList[index].duration))    
         
         # Define the actions for the On, Off and Activate Button
         self.SimpleControlFrameList[index].pushButton_ON.clicked.connect(lambda: self.ArduinoCommunication.update_LED(self.LEDList[index].pin_num, convert_mA_into_pwm_val(self.SimpleControlFrameList[index].horizontalSlider.value())))
@@ -589,7 +742,7 @@ class Ui_MainWindow(object):
 		# Turn on the LED
         self.SimpleControlFrameList[index].pushButton_ON.clicked.emit()
 		# Wait for the duration
-        duration = int(self.SimpleControlFrameList[index].lineEdit_duration.text())
+        duration = float(self.SimpleControlFrameList[index].lineEdit_duration.text())
 		# Turn off after duration the LED        
         QTimer.singleShot(duration*1000, lambda: self.SimpleControlFrameList[index].pushButton_OFF.clicked.emit())
         
@@ -612,22 +765,28 @@ class Ui_MainWindow(object):
         self.frame_general.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_2 = QHBoxLayout(self.frame_general)
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.label_led_name = QLabel(self.frame_general)
-        self.label_led_name.setObjectName(u"label_led_name")
+        #self.label_led_name = QLabel(self.frame_general)
+        #self.label_led_name.setObjectName(u"label_led_name")
         font = QFont()
         font.setPointSize(9)
         font.setBold(True)
         #font.setWeight(75)
-        self.label_led_name.setFont(font)
 
+        self.label_led_name = QLabel(self.frame_general)
+        self.label_led_name.setObjectName(u"label_led_name")
+        self.label_led_name.setMinimumSize(QSize(180, 0))
         
-
-        self.lineEdit_led_name = QLineEdit(self.frame_general)
-        self.lineEdit_led_name.setObjectName(u"lineEdit_42")
-        self.lineEdit_led_name.setEnabled(False)
-        self.lineEdit_led_name.setMinimumSize(QSize(200, 0))
-        self.lineEdit_led_name.setMaximumSize(QSize(400, 16777215))
-        self.lineEdit_led_name.setClearButtonEnabled(False)
+        
+        self.line_56 = QFrame(self.frame_general)
+        self.line_56.setObjectName(u"line_56")
+        self.line_56.setFrameShape(QFrame.VLine)
+        self.line_56.setFrameShadow(QFrame.Sunken)
+        
+        
+        self.label_usage = QLabel(self.frame_general)
+        self.label_usage.setObjectName(u"label_usage")
+        self.label_usage.setMinimumSize(QSize(30, 0))
+        
 
         self.checkBox_calibrate = QCheckBox(self.frame_general)
         self.checkBox_calibrate.setObjectName(u"checkBox_calibrate")
@@ -666,9 +825,7 @@ class Ui_MainWindow(object):
         self.label_led_vals = QLabel(self.frame_led_val)
         self.label_led_vals.setObjectName(u"label_led_vals")
         self.label_led_vals.setMinimumSize(QSize(180, 0))
-        font1 = QFont()
-        font1.setItalic(False)
-        self.label_led_vals.setFont(font1)
+        
 
         self.label_dimmer_val = QLabel(self.frame_led_val)
         self.label_dimmer_val.setObjectName(u"label_dimmer_val")
@@ -677,78 +834,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_14.addWidget(self.frame_led_val)
 
-        # Frame for the Spectrometer values
-        self.frame_spectrometer_val = QFrame(self.frame_measurement)
-        self.frame_spectrometer_val.setObjectName(u"frame_spectrometer_val")
-        self.frame_spectrometer_val.setFrameShape(QFrame.StyledPanel)
-        self.frame_spectrometer_val.setFrameShadow(QFrame.Raised)
-        self.gridLayout_6 = QGridLayout(self.frame_spectrometer_val)
-        self.gridLayout_6.setObjectName(u"gridLayout_6")
-        self.lineEdit_placeholder1 = QLineEdit(self.frame_spectrometer_val)
-        self.lineEdit_placeholder1.setObjectName(u"lineEdit_placeholder1")
-
         
-
-        self.label_placeholder2 = QLabel(self.frame_spectrometer_val)
-        self.label_placeholder2.setObjectName(u"label_placeholder2")
-
-        
-
-        self.line_2 = QFrame(self.frame_spectrometer_val)
-        self.line_2.setObjectName(u"line_2")
-        self.line_2.setFrameShape(QFrame.VLine)
-        self.line_2.setFrameShadow(QFrame.Sunken)
-
-        self.gridLayout_6.addWidget(self.line_2, 0, 1, 1, 1)
-
-        self.label_spectrometer_vals = QLabel(self.frame_spectrometer_val)
-        self.label_spectrometer_vals.setObjectName(u"label_spectrometer_vals")
-        self.label_spectrometer_vals.setMinimumSize(QSize(180, 0))
-        self.label_spectrometer_vals.setFont(font1)
-
-        self.lineEdit_placeholder2 = QLineEdit(self.frame_spectrometer_val)
-        self.lineEdit_placeholder2.setObjectName(u"lineEdit_placeholder2")
-
-        self.label_placeholder1 = QLabel(self.frame_spectrometer_val)
-        self.label_placeholder1.setObjectName(u"label_placeholder1")
-
-        
-        
-
-        self.verticalLayout_14.addWidget(self.frame_spectrometer_val)
-
-        # Frame for the Hyperspectral Camera values
-        self.frame_hypercam_val = QFrame(self.frame_measurement)
-        self.frame_hypercam_val.setObjectName(u"frame_hypercam_val")
-        self.frame_hypercam_val.setFrameShape(QFrame.StyledPanel)
-        self.frame_hypercam_val.setFrameShadow(QFrame.Raised)
-        self.gridLayout_5 = QGridLayout(self.frame_hypercam_val)
-        self.gridLayout_5.setObjectName(u"gridLayout_5")
-        
-        self.lineEdit_placeholder3 = QLineEdit(self.frame_hypercam_val)
-        self.lineEdit_placeholder3.setObjectName(u"lineEdit_placeholder3")
-
-        self.label_hypercam_vals = QLabel(self.frame_hypercam_val)
-        self.label_hypercam_vals.setObjectName(u"label_hypercam_vals")
-        self.label_hypercam_vals.setMinimumSize(QSize(180, 0))
-
-        
-
-        self.line_3 = QFrame(self.frame_hypercam_val)
-        self.line_3.setObjectName(u"line_3")
-        self.line_3.setFrameShape(QFrame.VLine)
-        self.line_3.setFrameShadow(QFrame.Sunken)
-
-        self.gridLayout_5.addWidget(self.line_3, 1, 2, 1, 1)
-
-        self.label_placeholder3 = QLabel(self.frame_hypercam_val)
-        self.label_placeholder3.setObjectName(u"label_placeholder3")
-
-
-        
-
-
-        self.verticalLayout_14.addWidget(self.frame_hypercam_val)
 
         
         # Frame for the Camera values
@@ -758,65 +844,83 @@ class Ui_MainWindow(object):
         self.frame_cam_val.setFrameShadow(QFrame.Raised)
         self.gridLayout_4 = QGridLayout(self.frame_cam_val)
         self.gridLayout_4.setObjectName(u"gridLayout_4")
-        self.label_placeholder4 = QLabel(self.frame_cam_val)
-        self.label_placeholder4.setObjectName(u"label_placeholder4")
-
-        self.line_4 = QFrame(self.frame_cam_val)
-        self.line_4.setObjectName(u"line_4")
-        self.line_4.setFrameShape(QFrame.VLine)
-        self.line_4.setFrameShadow(QFrame.Sunken)
-
-        self.gridLayout_4.addWidget(self.line_4, 0, 1, 1, 1)
 
         self.label_cam_vals = QLabel(self.frame_cam_val)
         self.label_cam_vals.setObjectName(u"label_cam_vals")
         self.label_cam_vals.setMinimumSize(QSize(180, 0))
+        
+        self.line_4 = QFrame(self.frame_cam_val)
+        self.line_4.setObjectName(u"line_4")
+        self.line_4.setFrameShape(QFrame.VLine)
+        self.line_4.setFrameShadow(QFrame.Sunken)
+        self.gridLayout_4.addWidget(self.line_4, 0, 1, 1, 1)
+        
+        self.label_iso = QLabel(self.frame_cam_val)
+        self.label_iso.setObjectName(u"label_iso")
 
-        self.lineEdit_placeholder4 = QLineEdit(self.frame_cam_val)
-        self.lineEdit_placeholder4.setObjectName(u"lineEdit_placeholder4")
-      
+        self.lineEdit_iso = QLineEdit(self.frame_cam_val)
+        self.lineEdit_iso.setObjectName(u"lineEdit_iso")
+        
+        self.label_aperture = QLabel(self.frame_cam_val)
+        self.label_aperture.setObjectName(u"label_aperture")
+
+        self.lineEdit_aperture = QLineEdit(self.frame_cam_val)
+        self.lineEdit_aperture.setObjectName(u"lineEdit_aperture")
+        
+        self.label_shutter_speed = QLabel(self.frame_cam_val)
+        self.label_shutter_speed.setObjectName(u"label_shutter_speed")
+
+        self.lineEdit_shutter_speed = QLineEdit(self.frame_cam_val)
+        self.lineEdit_shutter_speed.setObjectName(u"lineEdit_shutter_speed")
+        
         self.verticalLayout_14.addWidget(self.frame_cam_val)
+        
+        # Create a new SimpleControlFrame object and append it to the MeasurementFrameList
+        self.MeasurementFrameList.append(MeasurementFrame(self.label_led_name, self.label_usage, self.checkBox_calibrate, self.checkBox_measurement, self.label_led_vals, self.lineEdit_dimmer_val, self.label_dimmer_val, self.label_duration, self.lineEdit_duration, self.label_cam_vals, self.label_iso, self.lineEdit_iso, self.label_aperture, self.lineEdit_aperture, self.label_shutter_speed, self.lineEdit_shutter_speed))
+        
+        # General Information  
+        self.horizontalLayout_2.addWidget(self.MeasurementFrameList[index].label_led_name)
+        self.horizontalLayout_2.addWidget(self.line_56)
+        self.horizontalLayout_2.addWidget(self.MeasurementFrameList[index].label_usage)
+        self.horizontalLayout_2.addWidget(self.MeasurementFrameList[index].checkBox_calibrate)
+        self.horizontalLayout_2.addWidget(self.MeasurementFrameList[index].checkBox_measurement)
+        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.horizontalLayout_2.addItem(self.horizontalSpacer_2)
+        
+        self.MeasurementFrameList[index].label_led_name.setText(self.LEDList[index].name + " LED")  
+        self.MeasurementFrameList[index].label_led_name.setFont(font)
+        self.checkBox_calibrate.setChecked(self.LEDList[index].calibration)
+        self.checkBox_measurement.setChecked(self.LEDList[index].measurement)
+        
+        # LED specific Values
+        self.gridLayout_2.addWidget(self.MeasurementFrameList[index].label_led_vals, 2, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.MeasurementFrameList[index].label_duration, 2, 2, 1, 1)
+        self.gridLayout_2.addWidget(self.MeasurementFrameList[index].lineEdit_duration, 2, 4, 1, 1)
+        self.gridLayout_2.addWidget(self.MeasurementFrameList[index].label_dimmer_val, 2, 5, 1, 1)
+        self.gridLayout_2.addWidget(self.MeasurementFrameList[index].lineEdit_dimmer_val, 2, 6, 1, 1)
+        
+        self.lineEdit_dimmer_val.setText(str(self.LEDList[index].dimming_val))
+        self.lineEdit_duration.setText(str(self.LEDList[index].duration))
+        
+        # Camera specific Values      
+        self.gridLayout_4.addWidget(self.MeasurementFrameList[index].label_cam_vals, 0, 0, 1, 1)
+        self.gridLayout_4.addWidget(self.MeasurementFrameList[index].label_iso, 0, 2, 1, 1)
+        self.gridLayout_4.addWidget(self.MeasurementFrameList[index].lineEdit_iso, 0, 3, 1, 1) 
+        self.gridLayout_4.addWidget(self.MeasurementFrameList[index].label_aperture, 0, 4, 1, 1)
+        self.gridLayout_4.addWidget(self.MeasurementFrameList[index].lineEdit_aperture, 0, 5, 1, 1) 
+        self.gridLayout_4.addWidget(self.MeasurementFrameList[index].label_shutter_speed, 0, 6, 1, 1)
+        self.gridLayout_4.addWidget(self.MeasurementFrameList[index].lineEdit_shutter_speed, 0, 7, 1, 1) 
+        
+        self.lineEdit_iso.setText(str(self.LEDList[index].camera_settings.iso))
+        self.lineEdit_aperture.setText(str(self.LEDList[index].camera_settings.aperture))
+        self.lineEdit_shutter_speed.setText(str(self.LEDList[index].camera_settings.shutter_speed))
 
+        # Horizontal Line
         self.line_6 = QFrame(self.frame_measurement)
         self.line_6.setObjectName(u"line_6")
         self.line_6.setFrameShape(QFrame.HLine)
         self.line_6.setFrameShadow(QFrame.Sunken)
-
         self.verticalLayout_14.addWidget(self.line_6)
-        
-         # Create a new SimpleControlFrame object and append it to the MeasurementFrameList
-        self.MeasurementFrameList.append(MeasurementFrame(self.label_led_name, self.lineEdit_led_name, self.checkBox_calibrate, self.checkBox_measurement, self.label_led_vals, self.lineEdit_dimmer_val, self.label_dimmer_val, self.label_duration, self.lineEdit_duration, self.label_spectrometer_vals, self.label_placeholder2, self.lineEdit_placeholder2, self.label_placeholder1, self.lineEdit_placeholder1, self.label_hypercam_vals, self.label_placeholder3, self.lineEdit_placeholder3, self.label_cam_vals, self.label_placeholder4, self.lineEdit_placeholder4))
-        
-        self.horizontalLayout_2.addWidget(self.MeasurementFrameList[index].label_led_name)   
-        self.horizontalLayout_2.addWidget(self.MeasurementFrameList[index].lineEdit_led_name)
-        self.horizontalLayout_2.addWidget(self.MeasurementFrameList[index].checkBox_calibrate)
-        self.horizontalLayout_2.addWidget(self.MeasurementFrameList[index].checkBox_measurement)
-        
-        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-        self.horizontalLayout_2.addItem(self.horizontalSpacer_2)
-        
-        self.gridLayout_2.addWidget(self.MeasurementFrameList[index].label_led_vals, 2, 0, 1, 1)
-        self.gridLayout_2.addWidget(self.MeasurementFrameList[index].lineEdit_dimmer_val, 2, 6, 1, 1)
-        self.gridLayout_2.addWidget(self.MeasurementFrameList[index].label_dimmer_val, 2, 5, 1, 1)
-        self.gridLayout_2.addWidget(self.MeasurementFrameList[index].label_duration, 2, 2, 1, 1)
-        self.gridLayout_2.addWidget(self.MeasurementFrameList[index].lineEdit_duration, 2, 4, 1, 1)
-        
-        self.gridLayout_6.addWidget(self.MeasurementFrameList[index].label_spectrometer_vals, 0, 0, 1, 1)
-        self.gridLayout_6.addWidget(self.MeasurementFrameList[index].label_placeholder2, 0, 4, 1, 1)
-        self.gridLayout_6.addWidget(self.MeasurementFrameList[index].lineEdit_placeholder2, 0, 5, 1, 1)
-        self.gridLayout_6.addWidget(self.MeasurementFrameList[index].label_placeholder1, 0, 2, 1, 1)
-        self.gridLayout_6.addWidget(self.MeasurementFrameList[index].lineEdit_placeholder1, 0, 3, 1, 1)
-        
-        self.gridLayout_5.addWidget(self.MeasurementFrameList[index].label_hypercam_vals, 1, 0, 1, 1)
-        self.gridLayout_5.addWidget(self.MeasurementFrameList[index].lineEdit_placeholder3, 1, 4, 1, 1)
-        self.gridLayout_5.addWidget(self.MeasurementFrameList[index].label_placeholder3, 1, 3, 1, 1)
-        
-        self.gridLayout_4.addWidget(self.MeasurementFrameList[index].label_cam_vals, 0, 0, 1, 1)
-        self.gridLayout_4.addWidget(self.MeasurementFrameList[index].label_placeholder4, 0, 2, 1, 1)
-        self.gridLayout_4.addWidget(self.MeasurementFrameList[index].lineEdit_placeholder4, 0, 3, 1, 1) 
-        
-        # Set the name of the LED
-        self.MeasurementFrameList[index].lineEdit_led_name.setText(self.LEDList[index].name)  
         
         self.verticalLayout_13.addWidget(self.frame_measurement)
         
@@ -871,7 +975,7 @@ class SimpleControlFrame:
             self.horizontalSlider = horizontalSlider
             
 class MeasurementFrame:
-        def __init__(self, label_led_name, lineEdit_led_name, checkBox_calibrate, checkBox_measurement, label_led_vals, lineEdit_dimmer_val, label_dimmer_val, label_duration, lineEdit_duration, label_spectrometer_vals, label_placeholder2, lineEdit_placeholder2, label_placeholder1, lineEdit_placeholder1, label_hypercam_vals, label_placeholder3, lineEdit_placeholder3, label_cam_vals, label_placeholder4, lineEdit_placeholder4):
+        def __init__(self, label_led_name, label_usage, checkBox_calibrate, checkBox_measurement, label_led_vals, lineEdit_dimmer_val, label_dimmer_val, label_duration, lineEdit_duration, label_cam_vals, label_iso, lineEdit_iso, label_aperture, lineEdit_aperture, label_shutter_speed, lineEdit_shutter_speed):
             """
             Create a new MeasurementFrame object.
             :param label_led_name: The label for the LED Name
@@ -892,11 +996,10 @@ class MeasurementFrame:
             :param label_placeholder3: The label for the Hyperspectral Camera Values
             :param lineEdit_placeholder3: The line edit for the Hyperspectral Camera Values
             :param label_cam_vals: The label for the Camera Values
-            :param label_placeholder4: The label for the Camera Values
-            :param lineEdit_placeholder4: The line edit for the Camera Values
+            
             """
             self.label_led_name = label_led_name
-            self.lineEdit_led_name = lineEdit_led_name
+            self.label_usage = label_usage
             self.checkBox_calibrate = checkBox_calibrate
             self.checkBox_measurement = checkBox_measurement
             self.label_led_vals = label_led_vals
@@ -904,17 +1007,14 @@ class MeasurementFrame:
             self.label_dimmer_val = label_dimmer_val
             self.label_duration = label_duration
             self.lineEdit_duration = lineEdit_duration
-            self.label_spectrometer_vals = label_spectrometer_vals
-            self.label_placeholder2 = label_placeholder2
-            self.lineEdit_placeholder2 = lineEdit_placeholder2
-            self.label_placeholder1 = label_placeholder1
-            self.lineEdit_placeholder1 = lineEdit_placeholder1
-            self.label_hypercam_vals = label_hypercam_vals
-            self.label_placeholder3 = label_placeholder3
-            self.lineEdit_placeholder3 = lineEdit_placeholder3
             self.label_cam_vals = label_cam_vals
-            self.label_placeholder4 = label_placeholder4
-            self.lineEdit_placeholder4 = lineEdit_placeholder4
+            self.label_iso = label_iso
+            self.lineEdit_iso = lineEdit_iso
+            self.label_aperture = label_aperture
+            self.lineEdit_aperture = lineEdit_aperture
+            self.label_shutter_speed = label_shutter_speed
+            self.lineEdit_shutter_speed = lineEdit_shutter_speed    
+            
             
             
             

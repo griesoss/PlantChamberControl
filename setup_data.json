@@ -1,0 +1,186 @@
+{
+    "type": "Setup",
+    "leds": {
+      "UV 2": {
+        "led_data": {
+          "pin_num": 12,
+          "mA_val": 60,
+          "temp_addr": "0x40",
+          "dimming_val": 1,
+          "duration": 1
+        },
+        "camera_data": {
+          "iso": 800,
+          "aperture": "F/4",
+          "shutter_speed": 0.004
+        },
+        "measurement_data": {
+          "calibration": true,
+          "measurement": false
+        }
+      },
+      "UV 1": {
+        "led_data": {
+          "pin_num": 11,
+          "mA_val": 100,
+          "temp_addr": "0x41",
+          "dimming_val": 1,
+          "duration": 1
+        },
+        "camera_data": {
+          "iso": 800,
+          "aperture": "F/4",
+          "shutter_speed": 0.004
+        },
+        "measurement_data": {
+          "calibration": true,
+          "measurement": false
+        }
+      },
+      "Blue": {
+        "led_data": {
+          "pin_num": 10,
+          "mA_val": 120,
+          "temp_addr": "0x42",
+          "dimming_val": 1,
+          "duration": 1
+        },
+        "camera_data": {
+          "iso": 800,
+          "aperture": "F/4",
+          "shutter_speed": 0.004
+        },
+        "measurement_data": {
+          "calibration": true,
+          "measurement": false
+        }
+      },
+      "Green": {
+        "led_data": {
+          "pin_num": 9,
+          "mA_val": 120,
+          "temp_addr": "0x43",
+          "dimming_val": 1,
+          "duration": 1
+        },
+        "camera_data": {
+          "iso": 800,
+          "aperture": "F/4",
+          "shutter_speed": 0.004
+        },
+        "measurement_data": {
+          "calibration": true,
+          "measurement": false
+        }
+      },
+      "Lime": {
+        "led_data": {
+          "pin_num": 8,
+          "mA_val": 120,
+          "temp_addr": "0x44",
+          "dimming_val": 1,
+          "duration": 1
+        },
+        "camera_data": {
+          "iso": 800,
+          "aperture": "F/4",
+          "shutter_speed": 0.004
+        },
+        "measurement_data": {
+          "calibration": true,
+          "measurement": false
+        }
+      },
+      "Orange": {
+        "led_data": {
+          "pin_num": 7,
+          "mA_val": 120,
+          "temp_addr": "0x45",
+          "dimming_val": 1,
+          "duration": 1
+        },
+        "camera_data": {
+          "iso": 800,
+          "aperture": "F/4",
+          "shutter_speed": 0.004
+        },
+        "measurement_data": {
+          "calibration": true,
+          "measurement": false
+        }
+      },
+      "Red": {
+        "led_data": {
+          "pin_num": 6,
+          "mA_val": 120,
+          "temp_addr": "0x46",
+          "dimming_val": 1,
+          "duration": 1
+        },
+        "camera_data": {
+          "iso": 800,
+          "aperture": "F/4",
+          "shutter_speed": 0.004
+        },
+        "measurement_data": {
+          "calibration": true,
+          "measurement": false
+        }
+      },
+      "Farred 1": {
+        "led_data": {
+          "pin_num": 5,
+          "mA_val": 120,
+          "temp_addr": "0x47",
+          "dimming_val": 1,
+          "duration": 1
+        },
+        "camera_data": {
+          "iso": 800,
+          "aperture": "F/4",
+          "shutter_speed": 0.004
+        },
+        "measurement_data": {
+          "calibration": true,
+          "measurement": false
+        }
+      },
+      "Farred 2": {
+        "led_data": {
+          "pin_num": 3,
+          "mA_val": 140,
+          "temp_addr": "0x48",
+          "dimming_val": 1,
+          "duration": 1
+        },
+        "camera_data": {
+          "iso": 800,
+          "aperture": "F/4",
+          "shutter_speed": 0.004
+        },
+        "measurement_data": {
+          "calibration": true,
+          "measurement": false
+        }
+      },
+      "5000 K": {
+        "led_data": {
+          "pin_num": 2,
+          "mA_val": 120,
+          "temp_addr": "0x49",
+          "dimming_val": 1,
+          "duration": 1
+        },
+        "camera_data": {
+          "iso": 800,
+          "aperture": "F/4",
+          "shutter_speed": 0.004
+        },
+        "measurement_data": {
+          "calibration": true,
+          "measurement": false
+        }
+      }
+    }
+  }
+  

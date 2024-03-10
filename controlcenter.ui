@@ -18,11 +18,11 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>2</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
-        <string>Setup</string>
+        <string>LED Setup</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>
@@ -175,14 +175,9 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab_2">
-       <attribute name="title">
-        <string>Calibration</string>
-       </attribute>
-      </widget>
       <widget class="QWidget" name="tab_3">
        <attribute name="title">
-        <string>Measurement</string>
+        <string>Calibration &amp;&amp; Measurement</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
@@ -229,6 +224,12 @@
                     <layout class="QHBoxLayout" name="horizontalLayout_2">
                      <item>
                       <widget class="QLabel" name="label_38">
+                       <property name="minimumSize">
+                        <size>
+                         <width>180</width>
+                         <height>0</height>
+                        </size>
+                       </property>
                        <property name="font">
                         <font>
                          <pointsize>9</pointsize>
@@ -242,24 +243,16 @@
                       </widget>
                      </item>
                      <item>
-                      <widget class="QLineEdit" name="lineEdit_42">
-                       <property name="enabled">
-                        <bool>false</bool>
+                      <widget class="Line" name="line_7">
+                       <property name="orientation">
+                        <enum>Qt::Vertical</enum>
                        </property>
-                       <property name="minimumSize">
-                        <size>
-                         <width>200</width>
-                         <height>0</height>
-                        </size>
-                       </property>
-                       <property name="maximumSize">
-                        <size>
-                         <width>400</width>
-                         <height>16777215</height>
-                        </size>
-                       </property>
-                       <property name="clearButtonEnabled">
-                        <bool>false</bool>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QLabel" name="label_16">
+                       <property name="text">
+                        <string>Use in</string>
                        </property>
                       </widget>
                      </item>
@@ -272,14 +265,14 @@
                         </size>
                        </property>
                        <property name="text">
-                        <string> Activate</string>
+                        <string>Calibration</string>
                        </property>
                       </widget>
                      </item>
                      <item>
                       <widget class="QCheckBox" name="checkBox">
                        <property name="text">
-                        <string>CheckBox</string>
+                        <string>Measurement</string>
                        </property>
                       </widget>
                      </item>
@@ -511,6 +504,65 @@
              </widget>
             </item>
             <item>
+             <widget class="QFrame" name="frame_18">
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_7">
+               <item row="0" column="2">
+                <widget class="QLabel" name="label_22">
+                 <property name="text">
+                  <string>Measurement Type</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_21">
+                 <property name="text">
+                  <string>Plant ID</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="4">
+                <spacer name="horizontalSpacer_3">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="0" column="1">
+                <widget class="QLineEdit" name="lineEdit_8">
+                 <property name="maximumSize">
+                  <size>
+                   <width>200</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="3">
+                <widget class="QComboBox" name="comboBox"/>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pushButton_6">
+              <property name="text">
+               <string>Start Calibration</string>
+              </property>
+             </widget>
+            </item>
+            <item>
              <widget class="QPushButton" name="pushButton_5">
               <property name="text">
                <string>Start Measurement</string>
@@ -644,7 +696,7 @@
       </widget>
       <widget class="QWidget" name="tab_4">
        <attribute name="title">
-        <string>Simple Control</string>
+        <string>Simple LED Control</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_5">
         <item>
