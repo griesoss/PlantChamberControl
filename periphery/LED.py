@@ -1,8 +1,8 @@
 from periphery.camera import *
 import json
 
-class led:
-    def __init__(self, name , is_on, pin_num, mA_val, temp_addr, dimming_val, duration, calibration, measurement):
+class LED:
+    def __init__(self, name , is_on, pin_num, mA_val, temp_addr, dimming_val = 1, duration = 1, calibration = False, measurement= False):
         """
         Initialize the LED object.
         :param name: Name of the LED
@@ -19,7 +19,7 @@ class led:
         self.calibration = calibration
         self.measurement = measurement
         
-        self.camera_settings = 0
+        self.camera_settings = Camera()
         
         
         
@@ -30,40 +30,34 @@ class led:
         """
         self.is_on = status
         
-    def set_mA_val(self, mA_val):
+    def set_dimming_val(self, dimming_val):
         """
-        Set the mA value of the LED.
-        :param mA_val: Forward current value
+        Set the dimming value of the LED.
+        :param dimming_val: Dimming value of the LED
         """
-        self.mA_val = mA_val
-        
-    def set_pin_num(self, pin_num):
-        """
-        Set the pin number of the LED.
-        :param pin_num: Pin number
-        """
-        self.pin_num = pin_num
-        
+        self.dimming_val = dimming_val
+    
     def set_duration(self, duration):
         """
         Set the duration of the LED.
         :param duration: Duration of the LED
         """
-        self.duration = duration  
+        self.duration = duration
     
-    def set_temp_addr(self, temp_addr):
+    def set_calibration(self, calibration):
         """
-        Set the temperature sensor address of the LED.
-        :param temp_addr: Temperature sensor address
+        Set the calibration status of the LED.
+        :param calibration: Calibration status of the LED
         """
-        self.temp_addr = temp_addr
+        self.calibration = calibration
+    
+    def set_measurement(self, measurement):
+        """
+        Set the measurement status of the LED.
+        :param measurement: Measurement status of the LED
+        """
+        self.measurement = measurement
         
-    def set_dimming_val(self, dimming_val):
-        """
-        Set the dimming value of the LED.
-        :param dimming_val: Dimming value
-        """
-        self.dimming_val = dimming_val
     
     def set_camera_settings(self, iso, aperture, shutter_speed):
         """
@@ -75,9 +69,17 @@ class led:
         self.camera_settings = Camera(iso, aperture, shutter_speed)
         
     
+
+    def update_measurement_data(self, measurement):
+        """
+        Update the measurement data of the LED.
+        :param measurement: Measurement data of the LED
+        """
+        self.measurement = measurement     
+    
 def initialize_leds():
     """
-    Initialize the LED objects and return a list of LED objects.
+    Initialize the LED objects with the data from the JSON file and return a list of LED objects.
     :return: LED_list
     """
     
@@ -100,7 +102,7 @@ def initialize_leds():
         calibration = led_data['measurement_data']['calibration']
         measurement = led_data['measurement_data']['measurement']
         
-        json_led= led(led_name, False , pin_num, mA_val, temp_addr, dimming_val, duration, calibration, measurement)
+        json_led= LED(led_name, False , pin_num, mA_val, temp_addr, dimming_val, duration, calibration, measurement)
         json_led.set_camera_settings(100, 2.8, 1/100)
         
         iso = led_data['camera_data']['iso']

@@ -12,6 +12,8 @@ import json
 from enum import Enum
 from periphery.LED import *
 from TemperatureData import *
+import threading
+
 
 
 class ArduinoCommunication(QObject):
@@ -20,6 +22,7 @@ class ArduinoCommunication(QObject):
 	"""
 	connection_error = Signal()
 	temp_changed = Signal()
+	lock = threading.Lock()
  
 	def __init__(self):
 		"""
@@ -43,40 +46,10 @@ class ArduinoCommunication(QObject):
      					
 		
 		# Default values for pin_data
-		self.pin_data = {
-			"type": "Setup",
-			"pwm_pin_val": {
-				"uv2": 13,
-				"uv1": 12,
-				"blue": 11,
-				"green": 10,
-				"lime": 9,
-				"orange": 8,
-				"red": 7,
-				"farred1": 6,
-				"farred2": 5,
-				"k5000": 4,
-				},
-			"temp_addr": {
-				"uv2": 0x40,
-				"uv1": 0x41,
-				"blue": 0x42,
-				"green": 0x43,	
-				"lime": 0x44,	
-				"orange": 0x45,		
-				"red": 0x46,
-				"farred1": 0x47,	
-				"farred2": 0x48,	
-				"k5000": 0x49,
-        		}
-		}
+		self.pin_data = {}
 
 		# Default values for toggle_data
-		self.toggle_data = {
-			"type": "Toggle",
-			"pin_num": 0,
-			"pwm_val": 250,
-		} 
+		self.toggle_data = {} 
 
 		# Create a global TemperatureData object array
 		self.temp_data = []
@@ -127,7 +100,9 @@ class ArduinoCommunication(QObject):
 		Write and read the json_data to and from the Arduino.
 		:param json_data: Data to be sent to the Arduino
 		"""
-		self.arduino.write(json_data) 
+		with self.lock:
+			self.arduino.write(json_data) 
+		#self.arduino.write(json_data)
 		#time.sleep(2) 
 		""" data = self.arduino.readlines()
 		for line in data:
@@ -184,19 +159,28 @@ class ArduinoCommunication(QObject):
 		Listen to the serial data from the Arduino.
 		"""
 		while True:
-			try:
-				line = self.arduino.readline().decode(errors='replace').strip()
-				if line:					
-					if line.startswith('{"type":"Temperature"'):
-						temp_data = json.loads(line)
-						# TODO: save data to database
-						self.save_temp_data(temp_data)
-						self.temp_changed.emit()
-					else:
-						print(line)
-			except Exception as e:
+			try:      
+				with self.lock:
+					line = self.arduino.readline().decode(errors='replace').strip()
+				
+			except serial.SerialException as e:
 				time.sleep(1)
 				self.reconnect()
+    
+			if line:					
+				if line.startswith('{"type":"Temperature"'):
+					try:
+						# Convert the line to json
+						temp_data = json.loads(line)
+      					# TODO: save data to database
+						self.save_temp_data(temp_data)
+						self.temp_changed.emit()
+						test =0
+      					
+					except json.JSONDecodeError as e:
+						print("Error: Invalid JSON format. Temperature data not saved.")				
+				else:
+					print(line)
     
 	
   
@@ -210,7 +194,7 @@ class ArduinoCommunication(QObject):
 			try:
 				self.arduino = serial.Serial(port='COM3', baudrate=115200, timeout=.1) 
 				arduino_communication = self.arduino
-			except Exception as e:
+			except serial.SerialException as e:
 				if self.dialog_opened == False:
 					self.connection_error.emit()
 				time.sleep(1)

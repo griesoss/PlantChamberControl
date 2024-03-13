@@ -107,6 +107,8 @@ void setup() {
 	}else{
 		Serial.println("Setup failed");
 	}
+
+	//delay(5000);
 } 
 
 void loop() { 
@@ -248,11 +250,13 @@ void executeJsonCommand(StaticJsonDocument<200> doc){
 		setupPins(doc);
 		//delay(1000);
 		setupTemperatureSensors(doc);
+		delay(1000);
 	}else if(strcmp(doc["type"], "ON") == 0 || strcmp(doc["type"], "OFF") == 0) {
 		// Toggling
     	togglePin(doc);
 	}else{
 		String type = doc["type"];
+		//Serial.println(doc);
 		Serial.println("Invalid command. Execution of " + type + " failed.");
 	}
 }

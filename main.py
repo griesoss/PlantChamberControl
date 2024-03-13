@@ -35,8 +35,8 @@ if __name__ == "__main__":
     # Create the application
     app = QApplication(sys.argv)
     
-    # Initialize the LED objects
-    led_list = initialize_leds()      
+    # Initialize the LED objects with the Setup Data from the JSON file
+    led_list = initialize_leds()          
     
     # Establishing Connection with the Arduino
     arduino_communication = ArduinoCommunication()    
@@ -46,6 +46,7 @@ if __name__ == "__main__":
     serial_thread.daemon = True # Daemonize the thread so it automatically closes when the main program exits
     serial_thread.start()
     #arduino_communication.temp_changed.connect(lambda: print("test")) # Connect the signal to the slot
+    
     
     # Create the main window    
     window = MainWindow(led_list, arduino_communication)
