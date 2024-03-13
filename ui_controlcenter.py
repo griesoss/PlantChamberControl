@@ -13,10 +13,36 @@ from PySide6.QtCore import *
 from PySide6.QtGui import * 
 #(QAction, QBrush, QColor, QConicalGradient, QCursor, QFont, QFontDatabase, QIcon, QLinearGradient, QPalette, QPainter, QPixmap, QRadialGradient)
 from PySide6.QtWidgets import *
+from matplotlib.backends.backend_qtagg  import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.figure import Figure
 
 #from LED import *
 from ArduinoCommunication import *
 from measurement import *
+
+class MpltCanvas(FigureCanvas):
+    def __init__(self, parent=None):
+        fig = Figure()
+        self.axes = fig.add_subplot(111)
+        super(MpltCanvas, self).__init__(fig)
+        self.setParent(parent)
+
+        x_data = [1, 2, 3, 4, 5]
+        y_data = [1, 2, 3, 4, 10]
+        self.axes.plot(x_data, y_data)  
+        
+        self.axes.plot(x_data, y_data, label='Example')
+        self.axes.set_xlabel('Time')
+        self.axes.set_ylabel('Temperature (°C)')
+        self.axes.legend()
+        self.axes.set_ylim(0, 30)
+        
+        self.redraw()
+
+    def redraw(self):
+            
+        self.draw() 
+        
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow, led_list, arduino_communication):   
@@ -306,10 +332,16 @@ class Ui_MainWindow(object):
         self.frame_7.setFrameShadow(QFrame.Raised)
         self.verticalLayout_10 = QVBoxLayout(self.frame_7)
         self.verticalLayout_10.setObjectName(u"verticalLayout_10")
-        self.graphicsView = QGraphicsView(self.frame_7)
-        self.graphicsView.setObjectName(u"graphicsView")
-
-        self.verticalLayout_10.addWidget(self.graphicsView)
+        
+        #self.graphicsView = QGraphicsView(self.frame_7)
+        #self.graphicsView.setObjectName(u"graphicsView")
+        #self.verticalLayout_10.addWidget(self.graphicsView)
+        
+        self.temperaturePlot = MpltCanvas(self.frame_7)
+        self.temperaturePlot.setObjectName(u"temperaturePlot")
+        self.temperaturePlot.setMinimumSize(0, 400)  # Set minimum size
+        self.verticalLayout_10.addWidget(self.temperaturePlot)
+        
 
         self.label_temp_plot = QLabel(self.frame_7)
         self.label_temp_plot.setObjectName(u"label_7")
@@ -388,6 +420,8 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.addWidget(self.scrollArea_4)
 
         self.tabWidget.addTab(self.tab_cal_measure, "")
+        
+
 
     def build_tab_simplecontrol(self, MainWindow):
         self.tab_simpl_ctrl = QWidget()
@@ -442,7 +476,27 @@ class Ui_MainWindow(object):
                     led.set_measurement(test.checkBox_measurement.isChecked())
                     led.set_calibration(test.checkBox_calibrate.isChecked())
                     
-        self.Measurement.start_measurement(self.LEDList)
+        self.Measurement.start_measurement(self.LEDList, self.temperaturePlot)
+        
+        self.tabWidget.setEnabled(True)
+        
+    def calibrate_button_clicked(self, MainWindow):
+        """
+        Handle the calibration button click event.
+        :param MainWindow: The main window of the application
+        """
+        self.tabWidget.setDisabled(True)
+        self.ArduinoCommunication.turn_off_all_LEDs(self.LEDList)
+        
+        for led in self.LEDList:
+            for test in self.MeasurementFrameList:
+                if led.name == test.label_led_name.text()[:-4]:
+                    led.set_dimming_val(int(test.lineEdit_dimmer_val.text()))
+                    led.set_duration(int(test.lineEdit_duration.text()))
+                    led.set_measurement(test.checkBox_measurement.isChecked())
+                    led.set_calibration(test.checkBox_calibrate.isChecked())
+                    
+        self.Measurement.start_calibration(self.LEDList)
         self.tabWidget.setEnabled(True)
     
     def setup_button_clicked(self, MainWindow):
@@ -897,8 +951,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_14.addWidget(self.frame_led_val)
 
-        
-
+    
         
         # Frame for the Camera values
         self.frame_cam_val = QFrame(self.frame_measurement)

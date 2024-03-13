@@ -13,6 +13,7 @@ from enum import Enum
 from periphery.LED import *
 from TemperatureData import *
 import threading
+from datetime import datetime
 
 
 
@@ -21,8 +22,10 @@ class ArduinoCommunication(QObject):
 	Establishes a connection with the Arduino and sends data to the Arduino.
 	"""
 	connection_error = Signal()
-	temp_changed = Signal()
 	lock = threading.Lock()
+	recording = False
+	continuous_temperature_data = []
+	datetime_at_start = 0
  
 	def __init__(self):
 		"""
@@ -53,7 +56,31 @@ class ArduinoCommunication(QObject):
 
 		# Create a global TemperatureData object array
 		self.temp_data = []
+	
+	def connect_to_measurement(self, measurement):
+		"""
+		Connect the temp_changed signal to the record_temp slot in the Measurement object.
+		:param measurement: Measurement object
+		"""
+		measurement.StartRecording.connect(self.start_temp_recording)
+		measurement.StopRecording.connect(self.stop_temp_recording)
+  
+	def start_temp_recording(self):
+		"""
+		Start the temperature recording.
+		"""
+		self.recording = True
+		self.continuous_temperature_data = []
+		self.datetime_at_start = datetime.now()
+  
+	def stop_temp_recording(self):
+		"""
+		Stop the temperature recording.
+		"""
+		self.recording = False
+
 		
+	
     
 	def turn_off_all_LEDs(self, LED_list):
 		"""
@@ -95,19 +122,13 @@ class ArduinoCommunication(QObject):
 		self.toggle_data["pin_num"] = pin_num
 		self.toggle_data["pwm_val"] = pwm_val
   
-	def write_read(self, json_data):
+	def write(self, json_data):
 		"""
-		Write and read the json_data to and from the Arduino.
+		Write and read the json_data to the Arduino.
 		:param json_data: Data to be sent to the Arduino
 		"""
 		with self.lock:
-			self.arduino.write(json_data) 
-		#self.arduino.write(json_data)
-		#time.sleep(2) 
-		""" data = self.arduino.readlines()
-		for line in data:
-			print(line.decode().strip()) # printing serial data
-			print() """
+			self.arduino.write(json_data) # Write the json_data to the Arduino
 	
 	# Turn on the LED
 	def update_LED(self, pin_num, pwm_val):
@@ -121,7 +142,7 @@ class ArduinoCommunication(QObject):
   		# Convert the toggle_data to json
 		json_toggle_data = json.dumps(self.toggle_data)
 		# Write and read the json_toggle_data
-		self.write_read(json_toggle_data.encode())
+		self.write(json_toggle_data.encode())
 	
 	# Turn off the LED
 	def turn_off_LED(self, pin_num):
@@ -134,7 +155,7 @@ class ArduinoCommunication(QObject):
   		# Convert the toggle_data to json
 		json_toggle_data = json.dumps(self.toggle_data)
 		# Write and read the json_toggle_data
-		self.write_read(json_toggle_data.encode())
+		self.write(json_toggle_data.encode())
   
   	
 	def setup_LEDs(self, LED_list):
@@ -152,7 +173,7 @@ class ArduinoCommunication(QObject):
 		self.arduino.setDTR(True)
 		# Write and read the json_pin_data
 		time.sleep(1) # waiting for the serial connection to initialize
-		self.write_read(json_pin_data.encode())
+		self.write(json_pin_data.encode())
   
 	def listen_serial(self):
 		"""
@@ -162,7 +183,6 @@ class ArduinoCommunication(QObject):
 			try:      
 				with self.lock:
 					line = self.arduino.readline().decode(errors='replace').strip()
-				
 			except serial.SerialException as e:
 				time.sleep(1)
 				self.reconnect()
@@ -173,9 +193,12 @@ class ArduinoCommunication(QObject):
 						# Convert the line to json
 						temp_data = json.loads(line)
       					# TODO: save data to database
-						self.save_temp_data(temp_data)
-						self.temp_changed.emit()
-						test =0
+						
+						#print("test")
+						#self.temp_changed.emit()
+						if self.recording:
+							self.continuous_temperature_data.append(TemperatureSet(self.save_temp_data(temp_data), (datetime.now()-self.datetime_at_start).total_seconds()))
+
       					
 					except json.JSONDecodeError as e:
 						print("Error: Invalid JSON format. Temperature data not saved.")				
@@ -204,6 +227,7 @@ class ArduinoCommunication(QObject):
 		"""
 		Get the temperature data from the Arduino.
 		"""
+		self.temp_data = []
 		# Iterate through the temp_data
 		for key, value_layer1 in temp_data.items():
 			values = []
