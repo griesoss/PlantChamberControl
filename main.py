@@ -45,12 +45,9 @@ if __name__ == "__main__":
     serial_thread = threading.Thread(target= arduino_communication.listen_serial)
     serial_thread.daemon = True # Daemonize the thread so it automatically closes when the main program exits
     serial_thread.start()
-    #arduino_communication.temp_changed.connect(lambda: print("test")) # Connect the signal to the slot
-    
     
     # Create the main window    
     window = MainWindow(led_list, arduino_communication)
     
     # Execute the application
-    sys.exit(app.exec())
-    
+    sys.exit(app.exec())  

@@ -9,7 +9,6 @@ from PySide6.QtWidgets import *
 import serial 
 import time 
 import json
-from enum import Enum
 from periphery.LED import *
 from TemperatureData import *
 import threading
@@ -18,6 +17,29 @@ from datetime import datetime
 class ArduinoCommunication(QObject):
 	"""
 	Establishes a connection with the Arduino and sends data to the Arduino.
+	
+ 	Signals:
+		connection_error: Signal emitted when there is a connection error with the Arduino
+	Attributes:
+		lock: Lock object for handling the serial communication
+		recording: Boolean value for the temperature recording status
+		continuous_temperature_data: List of TemperatureSet objects
+		datetime_at_start: Datetime object
+	Methods:
+		__init__: Initialize the ArduinoCommunication object and establish a connection with the Arduino
+		connect_to_measurement: Connect the temp_changed signal to the record_temp slot in the Measurement object
+		start_temp_recording: Start the temperature recording
+		stop_temp_recording: Stop the temperature recording
+		turn_off_all_LEDs: Turn off all the LEDs in the LED_list
+		update_pin_data: Update the pin_data with the pin numbers of the LED objects
+		update_toggle_data: Update the toggle_data with the new values
+		write: Write and read the json_data to the Arduino
+		update_LED: Turn on the LED with the given pin number and PWM value
+		turn_off_LED: Turn off the LED with the given pin number
+		setup_LEDs: Set up the LEDs with the given pin numbers
+		listen_serial: Listen to the serial data from the Arduino
+		reconnect: Reconnect to the Arduino
+		save_temp_data: Get the temperature data from the Arduino
 	"""
 	connection_error = Signal()
 	lock = threading.Lock()
@@ -40,12 +62,12 @@ class ArduinoCommunication(QObject):
 				self.arduino = serial.Serial(port='COM3', baudrate=115200, timeout=.1) 
 				arduino_communication = self.arduino
 			except Exception as e:				
+				# If the connection to the Arduino fails, emit the connection_error signal to open the ConnectionDialog Window to inform the user
 				dialog = ConnectionDialog()
 				dialog.exec()
 				time.sleep(1)
 				arduino_communication = None
      					
-		
 		# Default values for pin_data
 		self.pin_data = {}
 
@@ -75,11 +97,8 @@ class ArduinoCommunication(QObject):
 		"""
 		Stop the temperature recording.
 		"""
-		self.recording = False
-
-		
-	
-    
+		self.recording = False	
+	    
 	def turn_off_all_LEDs(self, LED_list):
 		"""
 		Turn off all the LEDs in the LED_list.
@@ -89,8 +108,6 @@ class ArduinoCommunication(QObject):
 			self.turn_off_LED(led.pin_num)
 			time.sleep(0.1)
    
-   
- 
 	def update_pin_data(self, LED_list):
 		"""
 		Update the pin_data with the pin numbers of the LED objects.
@@ -125,6 +142,7 @@ class ArduinoCommunication(QObject):
 		Write and read the json_data to the Arduino.
 		:param json_data: Data to be sent to the Arduino
 		"""
+		# Create a lock for the serial communication
 		with self.lock:
 			self.arduino.write(json_data) # Write the json_data to the Arduino
 	
@@ -178,8 +196,10 @@ class ArduinoCommunication(QObject):
 		Listen to the serial data from the Arduino.
 		"""
 		while True:
-			try:      
+			try:
+				# Create a lock for the serial communication
 				with self.lock:
+					# Read the serial data from the Arduino
 					line = self.arduino.readline().decode(errors='replace').strip()
 			except serial.SerialException as e:
 				time.sleep(1)
@@ -190,26 +210,22 @@ class ArduinoCommunication(QObject):
 					try:
 						# Convert the line to json
 						temp_data = json.loads(line)
-      					# TODO: save data to database
 						
-						#print("test")
-						#self.temp_changed.emit()
+						# If the temperature recording is on, save the temperature data
 						if self.recording:
 							self.continuous_temperature_data.append(TemperatureSet(self.save_temp_data(temp_data), (datetime.now()-self.datetime_at_start).total_seconds()))
-
-      					
+       
 					except json.JSONDecodeError as e:
+						# If the json data is invalid, print an error message
 						print("Error: Invalid JSON format. Temperature data not saved.")				
 				else:
 					print(line)
-    
-	
-  
+
 	def reconnect(self):
 		"""
 		Reconnect to the Arduino.
 		"""
-		# try to connect arduino
+		# Try to connect to the Arduino
 		arduino_communication = None
 		while arduino_communication is None:
 			try:
@@ -223,7 +239,7 @@ class ArduinoCommunication(QObject):
     				
 	def save_temp_data(self, temp_data):
 		"""
-		Get the temperature data from the Arduino.
+		From the temp_data from the Arduino, create a list of TemperatureData objects and return it.
 		"""
 		self.temp_data = []
 		# Iterate through the temp_data
@@ -237,7 +253,13 @@ class ArduinoCommunication(QObject):
   
 
 class ConnectionDialog(QDialog):
+    """
+    ConnectionDialog class to inform the user about the Arduino connection error in a Popup Dialog.
+    """
     def __init__(self):
+        """
+        Initialize the ConnectionDialog object.
+        """
         super().__init__()
         self.setWindowTitle("Arduino Connection Error")
         self.resize(300, 100)  # Set the size of the dialog
@@ -266,8 +288,3 @@ class ConnectionDialog(QDialog):
         button = QPushButton("OK")
         button.clicked.connect(self.accept)
         layout.addWidget(button)
-
-
-
-
-

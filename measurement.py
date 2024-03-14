@@ -7,11 +7,21 @@ import os
 
 
 class Measurement:
+    """
+    Measurement class for starting and saving the measurement data.
     
-    
+    Attributes:
+        ArduinoCommunication: ArduinoCommunication object
+    Methods:
+        __init__: Initialize the Measurement object
+        start_measurement: Start the measurement
+        start_calibration: Start the calibration
+        save_to_folder: Save the measurement data to a folder
+    """
     def __init__(self, arduino_communication):
         """
         Initialize the Measurement object.
+        :param arduino_communication: ArduinoCommunication object
         """
         self.ArduinoCommunication = arduino_communication
         
@@ -19,12 +29,14 @@ class Measurement:
     def start_measurement(self, LEDList, temperaturePlot):
         """
         Start the measurement.
-        """
+        :param LEDList: List of LED objects
+        :param temperaturePlot: Temperature plot Canvas
+        """              
         
-        
-        
+        # Get the current timestamp
         timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
         print ("Start measurement at: " + timestamp)
+        
         # Start Temperature Recording
         self.ArduinoCommunication.start_temp_recording()
         
@@ -36,8 +48,7 @@ class Measurement:
                 #QTimer.singleShot(led.duration*1000, lambda: self.ArduinoCommunication.turn_off_LED(led.pin_num))
                 self.ArduinoCommunication.turn_off_LED(led.pin_num)
             
-            #Take a picture
-            #Save the picture
+            #Take and save a picture
         
         # Stop Temperature Recording    
         self.ArduinoCommunication.stop_temp_recording()
@@ -57,18 +68,25 @@ class Measurement:
         temperaturePlot.axes.set_ylim(0, 30) # Set the y-axis range
         temperaturePlot.draw()  # Redraw the plot
         
-        self.save_to_folder(df, timestamp)
+        temperaturePlot.figure.savefig('temperature_plot.png') # Save the plot as a .png file
+        
+        # Save the measurement data to a folder
+        self.save_to_folder(df, temperaturePlot, timestamp)
             
         
     def start_calibration(self, LEDList):
         """
         Start the calibration.
         """
+        # TODO: Implement the calibration
         
         
-    def save_to_folder(self, df, timestamp):
+    def save_to_folder(self, df, temperaturePlot, timestamp):
         """
         Save the measurement data to a folder.
+        :param df: DataFrame with the temperature data
+        :param temperaturePlot: Temperature plot Canvas
+        :param timestamp: Timestamp of the start of the measurement
         """
         # Get the directory of the main script
         main_dir = os.path.dirname(os.path.realpath(__file__))
@@ -84,14 +102,10 @@ class Measurement:
         # Create the directory
         os.makedirs(dir_path, exist_ok=True)
         
-        location_str = dir_path + "/" + timestamp + '_temperature_data'  + '.csv'
-        df.to_csv(location_str, index=False)
+        # Save the temperature data to the directory
+        temp_location_str = dir_path + "/" + timestamp + '_temperature_data'  + '.csv'        
+        df.to_csv(temp_location_str, index=False)
         
-        
-        
-        
-            
-        
-        
-        
- 
+        # Save the temperature plot to the directory
+        temp_fig_location_str = dir_path + "/" + timestamp + '_temperature_graph'  + '.png'
+        temperaturePlot.figure.savefig(temp_fig_location_str) 
