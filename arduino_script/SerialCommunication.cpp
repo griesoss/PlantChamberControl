@@ -1,4 +1,4 @@
-#include "ArduinoCommunication.h"
+#include "SerialCommunication.h"
 
 /**
  * Reads the serial input and parses it into a JSON document

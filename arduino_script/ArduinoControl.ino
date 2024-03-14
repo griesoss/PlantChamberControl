@@ -1,5 +1,5 @@
 #include <Wire.h>
-#include "ArduinoCommunication.h"
+#include "SerialCommunication.h"
 
 #include <Temperature_LM75_Derived.h>
 #define TCA_ADDRESS  0x70 // I2C address of the TCA9548A
@@ -148,16 +148,6 @@ String measureTemperature() {
 	serializeJson(doc, output);
 	return output;
 }
-
-
-/* Generic_LM75 getTemperatureSensor(int address){
-	for (int i = 0; i < sizeof(tempSensors); i++){
-		if (tempSensors[i].address == address){
-			return tempSensors[i].sensor;
-		}
-	}
-} */
-
 
 /**
  * Toggles the pin based on the type of command

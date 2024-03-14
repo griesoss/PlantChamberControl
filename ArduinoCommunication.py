@@ -15,8 +15,6 @@ from TemperatureData import *
 import threading
 from datetime import datetime
 
-
-
 class ArduinoCommunication(QObject):
 	"""
 	Establishes a connection with the Arduino and sends data to the Arduino.
