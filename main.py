@@ -4,8 +4,6 @@ from PySide6 import *
 
 from ui_controlcenter import *
 
-#from LED import *
-
 class MainWindow(QMainWindow):
     
     def __init__(self, led_list, arduino_communication):
@@ -19,8 +17,7 @@ class MainWindow(QMainWindow):
         self.ui.setupUi(self,led_list, arduino_communication)
         arduino_communication.connection_error.connect(self.handle_connection_error)
         self.show()
-        
-        
+                
     def handle_connection_error(self):
         """
         Handle the connection error.
@@ -29,8 +26,7 @@ class MainWindow(QMainWindow):
         arduino_communication.dialog_opened = True
         connection_dialog.exec()
         arduino_communication.dialog_opened = False
-        
-        
+                
 if __name__ == "__main__":
     # Create the application
     app = QApplication(sys.argv)
